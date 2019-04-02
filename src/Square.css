@@ -1,0 +1,43 @@
+.Square {
+    width: 40px;
+    height: 40px;
+    background: #eee;
+    font-size: 40px;
+    line-height: 40px;
+    border: 1px outset #ddd;
+    cursor: default;
+}
+.Square.mine {
+    background-color: darkred;
+    color: white;
+}
+.Square.revealed {
+    background: #ddd;
+}
+.Square.number1 {
+    color: blue;
+}
+.Square.number2 {
+    color: green;
+}
+.Square.number3 {
+    color: red;
+}
+.Square.number4 {
+    color: darkblue;
+}
+.Square.number5 {
+    color: darkred;
+}
+.Square.number6 {
+    color: teal;
+}
+.Square.number7 {
+    color: #333;
+}
+.Square.number8 {
+    color: deeppink;
+}
+.Square:focus {
+    outline: none;
+}

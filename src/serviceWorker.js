@@ -121,7 +121,7 @@ function checkValidServiceWorker(swUrl, config) {
     })
     .catch(() => {
       console.log(
-        'No internet connection found. App is running in offline mode.'
+        'No internet connection found. Game is running in offline mode.'
       );
     });
 }
