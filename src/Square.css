@@ -1,11 +1,15 @@
 .Square {
     width: 40px;
     height: 40px;
-    background: #eee;
-    font-size: 40px;
+    font-size: 30px;
+    font-weight: bold;
     line-height: 40px;
+    background: #eee;
     border: 1px outset #ddd;
     cursor: default;
+    display: inline-block;
+    float: left;
+    outline: none;
 }
 .Square.mine {
     background-color: darkred;
@@ -37,7 +41,4 @@
 }
 .Square.number8 {
     color: deeppink;
-}
-.Square:focus {
-    outline: none;
 }

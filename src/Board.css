@@ -1,2 +1,10 @@
 .Board {
+    display: inline-block;
+    margin: 0 auto;
+    border: 4px solid #ddd;
+}
+.row::after {
+    clear: both;
+    content: "";
+    display: block;
 }
