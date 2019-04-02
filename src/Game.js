@@ -21,6 +21,7 @@ class Game extends Component {
       solution: this.generateGame(),
       game: this.generateArray(null),
       gameFinished: false,
+      status: '🙂',
     };
   }
 
@@ -35,7 +36,8 @@ class Game extends Component {
     this.reveal(game, row, column);
 
     const gameFinished = this.isMine(game, row, column);
-    this.setState({game: game, gameFinished: gameFinished});
+    const status = gameFinished ? '💀' : this.state.status;
+    this.setState({game: game, gameFinished: gameFinished, status: status});
   }
 
   reveal(squares, row, column) {
@@ -118,7 +120,7 @@ class Game extends Component {
       <div className="Game">
         <div className="status">
           <button className="restart" onClick={() => this.setState(this.getInitialState())}>
-            {this.state.gameFinished ? '💀' : '🙂'}
+            {this.state.status}
           </button>
         </div>
         <Board
