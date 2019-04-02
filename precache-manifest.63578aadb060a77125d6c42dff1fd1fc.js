@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "4010d263e697e48d3aac",
-    "url": "/minesweeper/static/css/main.7c9f0514.chunk.css"
+    "revision": "cef3f1f99f6243669c89",
+    "url": "/minesweeper/static/css/main.a526fabc.chunk.css"
   },
   {
-    "revision": "4010d263e697e48d3aac",
-    "url": "/minesweeper/static/js/main.ecfb86a2.chunk.js"
+    "revision": "cef3f1f99f6243669c89",
+    "url": "/minesweeper/static/js/main.d5903312.chunk.js"
   },
   {
     "revision": "0f86e2ffe97a36d3984a",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/minesweeper/static/js/2.d6a534e5.chunk.js"
   },
   {
-    "revision": "e795c4ef4b50ed3e958f9b6f37eacaea",
+    "revision": "fdf98ad5f5ef0404a19112d0f214cce3",
     "url": "/minesweeper/index.html"
   }
 ];
