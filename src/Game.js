@@ -21,7 +21,7 @@ class Game extends Component {
       solution: this.generateGame(),
       game: this.generateArray(null),
       gameFinished: false,
-      status: '🙂',
+      buttonStatus: '🙂',
     };
   }
 
@@ -35,9 +35,7 @@ class Game extends Component {
 
     this.reveal(game, row, column);
 
-    const gameFinished = this.isMine(game, row, column);
-    const status = gameFinished ? '💀' : this.state.status;
-    this.setState({game: game, gameFinished: gameFinished, status: status});
+    this.updateGameStatus(game, row, column);
   }
 
   reveal(squares, row, column) {
@@ -61,6 +59,33 @@ class Game extends Component {
     this.reveal(squares, row - 1, column + 1);
     this.reveal(squares, row + 1, column + 1);
     this.reveal(squares, row + 1, column - 1);
+  }
+
+  updateGameStatus(squares, row, column) {
+    if (this.isMine(squares, row, column)) {
+      return this.setState({
+        game: squares,
+        gameFinished: true,
+        buttonStatus: '💀',
+      });
+    }
+
+    const gameFinished = !this.thereAreRemainingMoves(squares);
+    const buttonStatus = gameFinished ? '😎' : this.state.buttonStatus;
+
+    if (gameFinished) {
+      squares = squares.map(row => row.map(square => square !== null ? square : '🚩'));
+    }
+
+    this.setState({
+      game: squares,
+      gameFinished: gameFinished,
+      buttonStatus: buttonStatus,
+    });
+  }
+
+  thereAreRemainingMoves(squares) {
+    return squares.flat().filter(sq => sq === null).length > mines;
   }
 
   randomInRange(minimum, maximum) {
@@ -120,7 +145,7 @@ class Game extends Component {
       <div className="Game">
         <div className="status">
           <button className="restart" onClick={() => this.setState(this.getInitialState())}>
-            {this.state.status}
+            {this.state.buttonStatus}
           </button>
         </div>
         <Board
