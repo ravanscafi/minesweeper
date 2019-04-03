@@ -38,3 +38,7 @@
     height: 50px;
     line-height: 48px;
 }
+
+.Game .bestScore {
+    margin-top: 10px;
+}

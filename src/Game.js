@@ -9,7 +9,9 @@ class Game extends Component {
 
   constructor(props) {
     super(props);
-    this.state = this.getInitialState();
+    let initialState = this.getInitialState();
+    initialState.bestTime = localStorage.getItem('bestTime');
+    this.state = initialState;
   }
 
   getInitialState() {
@@ -114,11 +116,17 @@ class Game extends Component {
     const gameFinished = !this.thereAreRemainingMoves(squares);
     const buttonStatus = gameFinished ? '😎' : this.state.buttonStatus;
     let minesLeft = this.state.minesLeft;
+    let bestTime = this.state.bestTime;
 
     if (gameFinished) {
       this.stopTimer();
       squares = this.getSolution(squares, '🚩');
       minesLeft = 0;
+      bestTime = bestTime === null || (this.state.time < bestTime) ? this.state.time : bestTime;
+    }
+
+    if (bestTime !== this.state.bestTime) {
+      localStorage.setItem('bestTime', bestTime);
     }
 
     this.setState({
@@ -126,6 +134,7 @@ class Game extends Component {
       gameFinished: gameFinished,
       buttonStatus: buttonStatus,
       minesLeft: minesLeft,
+      bestTime: bestTime,
     });
   }
 
@@ -237,6 +246,7 @@ class Game extends Component {
           onRightClick={(event, row, column) => this.handleRightClick(event, row, column)}
           game={this.state.game}
         />
+        <div className="bestScore">{this.state.bestTime !== null ? 'Best time: '+this.state.bestTime : ''}</div>
       </div>
     );
   }
