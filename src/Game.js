@@ -89,11 +89,11 @@ class Game extends Component {
     this.reveal(squares, row + 1, column - 1);
   }
 
-  updateGameStatus(squares, row, column) {
-    if (Game.isMine(squares, row, column)) {
+  updateGameStatus(game, row, column) {
+    if (Game.isMine(game, row, column)) {
       this.stopTimer();
 
-      squares = squares.map(
+      game = game.map(
         (row, rowKey) => row.map(
           (square, squareKey) => {
             const isMine = Game.isMine(this.state.solution, rowKey, squareKey);
@@ -107,20 +107,20 @@ class Game extends Component {
       );
 
       return this.setState({
-        game: squares,
+        game: game,
         gameFinished: true,
         buttonStatus: '💀',
       });
     }
 
-    const gameFinished = !this.thereAreRemainingMoves(squares);
+    const gameFinished = !this.thereAreRemainingMoves(game);
     const buttonStatus = gameFinished ? '😎' : this.state.buttonStatus;
     let minesLeft = this.state.minesLeft;
     let bestTime = this.state.bestTime;
 
     if (gameFinished) {
       this.stopTimer();
-      squares = this.getSolution(squares, '🚩');
+      game = this.getSolution(game, '🚩');
       minesLeft = 0;
       bestTime = bestTime === null || (this.state.time < bestTime) ? this.state.time : bestTime;
     }
@@ -129,13 +129,7 @@ class Game extends Component {
       localStorage.setItem('bestTime', bestTime);
     }
 
-    this.setState({
-      game: squares,
-      gameFinished: gameFinished,
-      buttonStatus: buttonStatus,
-      minesLeft: minesLeft,
-      bestTime: bestTime,
-    });
+    this.setState({...game, gameFinished, buttonStatus, minesLeft, bestTime});
   }
 
   getSolution(squares, symbol) {
@@ -154,7 +148,7 @@ class Game extends Component {
   }
 
   static randomInRange(minimum, maximum) {
-    return Math.round(Math.random() * (maximum - minimum) + minimum);
+    return Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
   }
 
   generateArray(value) {
@@ -239,7 +233,9 @@ class Game extends Component {
           onRightClick={(event, row, column) => this.handleRightClick(event, row, column)}
           game={this.state.game}
         />
-        <div className="bestScore">{this.state.bestTime !== null ? 'Best time: '+this.state.bestTime : ''}</div>
+        <div className="bestScore">
+          {this.state.bestTime !== null ? 'Best time: '+this.state.bestTime : ''}
+        </div>
       </div>
     );
   }
