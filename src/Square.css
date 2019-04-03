@@ -11,6 +11,10 @@
     float: left;
     outline: none;
 }
+.Square.unrevealed:active {
+    background: #999;
+    border: 1px inset #fff;
+}
 .Square.mine {
     background-color: darkred;
     color: white;
