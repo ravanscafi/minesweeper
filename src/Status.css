@@ -1,0 +1,31 @@
+.status {
+    display: inline-block;
+    margin: 0 auto;
+}
+.status::after {
+    clear: both;
+    content: "";
+    display: block;
+}
+.lcd {
+    display: inline-block;
+    margin: 0 20px;
+    font-family: 'Orbitron', monospace, sans-serif;
+    color: #f00;
+    background: #333;
+    font-size: 36px;
+    float: left;
+    width: 100px;
+    height: 50px;
+    line-height: 56px;
+}
+.restart {
+    text-align: center;
+    background: #fff;
+    font-size: 26px;
+    margin: 0 20px;
+    float: left;
+    width: 50px;
+    height: 50px;
+    line-height: 48px;
+}

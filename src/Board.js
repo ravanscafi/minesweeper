@@ -1,34 +1,30 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Square from './Square';
 import './Board.css';
 
-class Board extends Component {
-  renderSquare(row, column, value) {
-    return (
-      <Square
-        key={row + "_" + column}
-        value={value}
-        onClick={() => this.props.onClick(row, column)}
-        onRightClick={(event) => this.props.onRightClick(event, row, column)}
-      />
-    );
-  }
+const renderSquare = (props, row, column, value) => {
+  return (
+    <Square
+      key={row + "_" + column}
+      value={value}
+      onClick={() => props.onClick(row, column)}
+      onRightClick={(event) => props.onRightClick(event, row, column)}
+    />
+  );
+};
 
-  renderRow(row, items) {
-    return (
-      <div className="row" key={row}>
-        {items.map((value, key) => this.renderSquare(row, key, value))}
-      </div>
-    );
-  }
+const renderRow = (props, row, items) => {
+  return (
+    <div className="row" key={row}>
+      {items.map((value, key) => renderSquare(props, row, key, value))}
+    </div>
+  );
+};
 
-  render() {
-    return (
-      <div className="Board">
-        {this.props.game.map((value, key) => this.renderRow(key, value))}
-      </div>
-    );
-  }
-}
-
-export default Board;
+export default function Board(props) {
+  return (
+    <div className="Board">
+      {props.game.map((value, key) => renderRow(props, key, value))}
+    </div>
+  );
+};

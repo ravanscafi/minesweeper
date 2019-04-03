@@ -29,3 +29,19 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+#root {
+  flex: 1;
+}
+footer {
+  text-align: center;
+  margin: 5px 10px;
+}
+footer a, footer a:visited {
+  color: #222;
+}

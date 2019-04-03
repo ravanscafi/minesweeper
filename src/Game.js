@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './Game.css';
 import Board from './Board';
+import Status from './Status';
 
 class Game extends Component {
   height = 9;
@@ -9,9 +10,7 @@ class Game extends Component {
 
   constructor(props) {
     super(props);
-    let initialState = this.getInitialState();
-    initialState.bestTime = localStorage.getItem('bestTime');
-    this.state = initialState;
+    this.state = this.getInitialState();
   }
 
   getInitialState() {
@@ -26,6 +25,7 @@ class Game extends Component {
       gameStarted: false,
       time: 0,
       start: 0,
+      bestTime: localStorage.getItem('bestTime'),
     };
   }
 
@@ -90,13 +90,13 @@ class Game extends Component {
   }
 
   updateGameStatus(squares, row, column) {
-    if (this.isMine(squares, row, column)) {
+    if (Game.isMine(squares, row, column)) {
       this.stopTimer();
 
       squares = squares.map(
         (row, rowKey) => row.map(
           (square, squareKey) => {
-            const isMine = this.isMine(this.state.solution, rowKey, squareKey);
+            const isMine = Game.isMine(this.state.solution, rowKey, squareKey);
             if (square === '🚩') {
               return isMine ? square : '❌';
             }
@@ -142,7 +142,7 @@ class Game extends Component {
     return squares.map(
       (row, rowKey) => row.map(
         (square, squareKey) =>
-          this.isMine(this.state.solution, rowKey, squareKey) ? symbol : this.state.solution[rowKey][squareKey]
+          Game.isMine(this.state.solution, rowKey, squareKey) ? symbol : this.state.solution[rowKey][squareKey]
       )
     );
   }
@@ -153,7 +153,7 @@ class Game extends Component {
     ).length > this.maximumMines;
   }
 
-  randomInRange(minimum, maximum) {
+  static randomInRange(minimum, maximum) {
     return Math.round(Math.random() * (maximum - minimum) + minimum);
   }
 
@@ -171,10 +171,10 @@ class Game extends Component {
     let column;
 
     while (generatedMines < this.maximumMines) {
-      row = this.randomInRange(0, this.height - 1);
-      column = this.randomInRange(0, this.width - 1);
+      row = Game.randomInRange(0, this.height - 1);
+      column = Game.randomInRange(0, this.width - 1);
 
-      if (!this.isMine(squares, row, column)) {
+      if (!Game.isMine(squares, row, column)) {
         squares[row][column] = '*';
         this.incrementSquare(squares, row - 1, column);
         this.incrementSquare(squares, row + 1, column);
@@ -192,20 +192,18 @@ class Game extends Component {
   }
 
   incrementSquare(squares, row, column) {
-    if (this.inRange(row, column) && !this.isMine(squares, row, column)) {
+    if (this.inRange(row, column) && !Game.isMine(squares, row, column)) {
       squares[row][column] = squares[row][column] + 1;
     }
   }
 
-  isMine(squares, row, column) {
+  static isMine(squares, row, column) {
     return squares[row][column] === '*';
   }
 
   inRange(row, column) {
-    return row >= 0
-      && column >= 0
-      && row < this.height
-      && column < this.width;
+    return row >= 0 && row < this.height
+      && column >= 0 && column < this.width;
   }
 
   startTimer() {
@@ -225,21 +223,16 @@ class Game extends Component {
     clearInterval(this.timer);
   }
 
-  leftPad(number) {
-    return number.toString().padStart(3, '0');
-  }
-
   render() {
     return (
       <div className="Game">
         <div className="wrapper">
-          <div className="status">
-            <div className="lcd minesLeft">{this.leftPad(this.state.minesLeft)}</div>
-            <button className="restart" onClick={() => this.setState(this.getInitialState())}>
-              {this.state.buttonStatus}
-            </button>
-            <div className="lcd timer">{this.leftPad(this.state.time)}</div>
-          </div>
+          <Status
+            buttonStatus={this.state.buttonStatus}
+            minesLeft={this.state.minesLeft}
+            time={this.state.time}
+            onClick={() => this.setState(this.getInitialState())}
+          />
         </div>
         <Board
           onClick={(row, column) => this.handleClick(row, column)}
