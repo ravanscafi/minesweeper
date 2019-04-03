@@ -6,6 +6,7 @@ export default function Square(props) {
     <button
       className={"Square"+(props.value === '*' ? ' mine' : (props.value !== null ? ' revealed number'+props.value : ''))}
       onClick={props.onClick}
+      onContextMenu={props.onRightClick}
     >
       {props.value ? props.value : ''}
     </button>

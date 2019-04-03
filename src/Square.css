@@ -1,9 +1,9 @@
 .Square {
-    width: 40px;
-    height: 40px;
-    font-size: 30px;
+    width: 5vh;
+    height: 5vh;
+    font-size: 4vh;
     font-weight: bold;
-    line-height: 40px;
+    line-height: 4vh;
     background: #eee;
     border: 1px outset #ddd;
     cursor: default;

@@ -9,6 +9,7 @@ class Board extends Component {
         key={row + "_" + column}
         value={value}
         onClick={() => this.props.onClick(row, column)}
+        onRightClick={(event) => this.props.onRightClick(event, row, column)}
       />
     );
   }
