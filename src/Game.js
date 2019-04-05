@@ -3,11 +3,11 @@ import './Game.css';
 import Board from './Board';
 import Status from './Status';
 
-class Game extends Component {
-  height = 9;
-  width = 9;
-  maximumMines = 10;
+const EMOJI_OK = '🙂';
+const EMOJI_GAME_OVER = '💀';
+const EMOJI_WIN = '😎';
 
+class Game extends Component {
   static randomInRange(minimum, maximum) {
     return Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
   }
@@ -42,7 +42,6 @@ class Game extends Component {
     ).length > maximumMines;
   }
 
-
   static leftPad(number) {
     return number.toString().padStart(3, '0');
   }
@@ -52,16 +51,19 @@ class Game extends Component {
     this.state = this.getInitialState();
   }
 
-  getInitialState() {
+  getInitialState(height = 9, width = 9, maximumMines = 10) {
     this.stopTimer();
 
     return {
-      game: Game.generateArray(this.height, this.width, null),
+      height: height,
+      width: width,
+      maximumMines: maximumMines,
+      minesLeft: maximumMines,
+      game: Game.generateArray(height, width, null),
       solution: null,
       gameStarted: false,
       gameFinished: false,
-      buttonStatus: '🙂',
-      minesLeft: this.maximumMines,
+      buttonStatus: EMOJI_OK,
       time: 0,
       start: 0,
       bestTime: localStorage.getItem('bestTime'),
@@ -79,13 +81,12 @@ class Game extends Component {
     let solution;
 
     if (!this.state.solution) {
-      solution = this.generateGame(this.height, this.width, row, column, this.maximumMines);
+      solution = this.generateGame(this.state.height, this.state.width, row, column, this.state.maximumMines);
       this.setState({gameStarted: true, solution: solution});
     } else {
       solution = this.state.solution.slice();
     }
     this.checkStart();
-
 
     if (this.state.gameFinished || game[row][column] !== null) {
       return;
@@ -159,12 +160,12 @@ class Game extends Component {
       return this.setState({
         game,
         gameFinished: true,
-        buttonStatus: '💀',
+        buttonStatus: EMOJI_GAME_OVER,
       });
     }
 
-    const gameFinished = !Game.thereAreRemainingMoves(game, this.maximumMines);
-    const buttonStatus = gameFinished ? '😎' : this.state.buttonStatus;
+    const gameFinished = !Game.thereAreRemainingMoves(game, this.state.maximumMines);
+    const buttonStatus = gameFinished ? EMOJI_WIN : this.state.buttonStatus;
     let minesLeft = this.state.minesLeft;
     let bestTime = this.state.bestTime;
 
@@ -217,8 +218,8 @@ class Game extends Component {
   }
 
   inRange(row, column) {
-    return row >= 0 && row < this.height
-      && column >= 0 && column < this.width;
+    return row >= 0 && row < this.state.height
+      && column >= 0 && column < this.state.width;
   }
 
   startTimer() {
