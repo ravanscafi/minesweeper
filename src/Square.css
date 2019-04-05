@@ -15,12 +15,14 @@
     background: #999;
     border: 1px inset #fff;
 }
-.Square.mine {
-    background-color: darkred;
-    color: white;
+.Square.emoji {
+    font-size: 2.5vh;
 }
-.Square.revealed {
+.Square.revealed, .Square.mine {
     background: #ddd;
+}
+.Square.mine.clicked {
+    background-color: #a00;
 }
 .Square.number1 {
     color: blue;

@@ -23,7 +23,7 @@ const renderRow = (props, row, items) => {
 
 export default function Board(props) {
   return (
-    <div className="Board">
+    <div className={'Board' + (props.gameFinished ? ' disabled' : '')}>
       {props.game.map((value, key) => renderRow(props, key, value))}
     </div>
   );

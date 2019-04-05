@@ -3,6 +3,9 @@
     margin: 0 auto;
     border: 4px solid #ddd;
 }
+.Board.disabled {
+    pointer-events: none;
+}
 .row::after {
     clear: both;
     content: "";

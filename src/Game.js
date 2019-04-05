@@ -13,7 +13,7 @@ class Game extends Component {
   }
 
   static isMine(squares, row, column) {
-    return squares[row][column] === '*';
+    return squares[row][column] === 'M';
   }
 
   static generateArray(height, width, value) {
@@ -38,7 +38,7 @@ class Game extends Component {
 
   static thereAreRemainingMoves(squares, maximumMines) {
     return squares.flat().filter(
-      sq => (sq === null || sq === '🚩')
+      sq => (sq === null || sq === 'F')
     ).length > maximumMines;
   }
 
@@ -94,11 +94,11 @@ class Game extends Component {
 
     let value = game[row][column];
     if (this.state.gameFinished
-      || (value !== null && value !== '🚩')) {
+      || (value !== null && value !== 'F')) {
       return;
     }
 
-    game[row][column] = value ? null : '🚩';
+    game[row][column] = value ? null : 'F';
     const minesLeft = this.state.minesLeft + (game[row][column] ? -1 : 1);
     Game.vibrate(200);
 
@@ -136,15 +136,16 @@ class Game extends Component {
         (row, rowKey) => row.map(
           (square, squareKey) => {
             const isMine = Game.isMine(this.state.solution, rowKey, squareKey);
-            if (square === '🚩') {
-              return isMine ? square : '❌';
+            if (square === 'F') {
+              return isMine ? square : 'W';
             }
 
-            return isMine ? '*' : square;
+            return isMine ? 'M' : square;
           }
         )
       );
       Game.vibrate(800);
+      game[row][column] = 'C'; // differ clicked mine that led to game over
 
       return this.setState({
         game,
@@ -160,7 +161,7 @@ class Game extends Component {
 
     if (gameFinished) {
       this.stopTimer();
-      game = Game.getSolution(game, this.state.solution, '🚩');
+      game = Game.getSolution(game, this.state.solution, 'F');
       minesLeft = 0;
       bestTime = bestTime === null || (this.state.time < bestTime) ? this.state.time : bestTime;
       Game.vibrate([300, 40, 300, 40, 300, 40, 300]);
@@ -184,7 +185,7 @@ class Game extends Component {
       column = Game.randomInRange(0, width - 1);
 
       if (!Game.isMine(game, row, column)) {
-        game[row][column] = '*';
+        game[row][column] = 'M';
         this.incrementMinesNearby(game, row - 1, column);
         this.incrementMinesNearby(game, row + 1, column);
         this.incrementMinesNearby(game, row, column - 1);
@@ -244,6 +245,7 @@ class Game extends Component {
           onClick={(row, column) => this.handleClick(row, column)}
           onRightClick={(event, row, column) => this.handleRightClick(event, row, column)}
           game={this.state.game}
+          gameFinished={this.state.gameFinished}
         />
         <div className="bestScore">
           {this.state.bestTime !== null ? 'Best time: ' + Game.leftPad(this.state.bestTime) : ''}

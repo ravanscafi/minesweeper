@@ -1,8 +1,23 @@
 import React from 'react';
 import './Square.css';
 
-const getClass = value =>
-  value === '*' ? 'mine' : (value !== null ? 'revealed number'+value : 'unrevealed');
+const classMapping = {
+  'C': 'emoji mine clicked',
+  'M': 'emoji mine',
+  'F': 'emoji flag',
+  'W': 'emoji wrong',
+  null: 'unrevealed',
+};
+
+const symbolMapping = {
+  'C': '💣',
+  'M': '💣',
+  'F': '🚩',
+  'W': '❌',
+};
+
+const getClass = value => classMapping[value] || 'revealed number' + value;
+const getSymbol = value => symbolMapping[value] || (value ? value : null);
 
 export default function Square(props) {
   return (
@@ -11,7 +26,7 @@ export default function Square(props) {
       onClick={props.onClick}
       onContextMenu={props.onRightClick}
     >
-      {props.value ? props.value : ''}
+      {getSymbol(props.value)}
     </button>
   );
 };
