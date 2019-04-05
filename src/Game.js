@@ -293,19 +293,22 @@ class Game extends Component {
             className={'difficulty-level ' + (this.isGame(9, 9, 10) ? 'selected' : '')}
             onClick={() => this.restart(9, 9, 10)}
           >
-            Beginner 👶
+            Beginner
+            <span role="img" aria-label="Beginner">👶</span>
           </button>
           <button
             className={'difficulty-level ' + (this.isGame(16, 16, 40) ? 'selected' : '')}
             onClick={() => this.restart(16, 16, 40)}
           >
-            Intermediate 🧑
+            Intermediate
+            <span role="img" aria-label="Intermediate">🧑</span>
           </button>
           <button
             className={'difficulty-level ' + (this.isGame(16, 30, 99) ? 'selected' : '')}
             onClick={() => this.restart(16, 30, 99)}
           >
-            Expert 🧓
+            Expert
+            <span role="img" aria-label="Expert">🧓</span>
           </button>
         </div>
       </div>
