@@ -23,6 +23,10 @@ class Game extends Component {
     )
   }
 
+  static vibrate(pattern) {
+    return navigator.vibrate(pattern);
+  }
+
   static getSolution(game, solution, symbol) {
     return game.map(
       (row, rowKey) => row.map(
@@ -96,6 +100,7 @@ class Game extends Component {
 
     game[row][column] = value ? null : '🚩';
     const minesLeft = this.state.minesLeft + (game[row][column] ? -1 : 1);
+    Game.vibrate(200);
 
     this.setState({game, minesLeft});
   }
@@ -139,6 +144,7 @@ class Game extends Component {
           }
         )
       );
+      Game.vibrate(800);
 
       return this.setState({
         game,
@@ -157,6 +163,7 @@ class Game extends Component {
       game = Game.getSolution(game, this.state.solution, '🚩');
       minesLeft = 0;
       bestTime = bestTime === null || (this.state.time < bestTime) ? this.state.time : bestTime;
+      Game.vibrate([300, 40, 300, 40, 300, 40, 300]);
     }
 
     if (bestTime !== this.state.bestTime) {
