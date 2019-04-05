@@ -10,3 +10,18 @@
 .Game .bestScore {
     margin: 10px 0;
 }
+
+.Game .difficulty-level {
+    background-color: #eee;
+    color: #333;
+    font-weight: bold;
+    font-size: 20px;
+    outline: none;
+    margin: 0 1vh;
+}
+.Game .difficulty-level.selected {
+    background-color: #333;
+    color: #eee;
+    font-weight: bold;
+    font-size: 20px;
+}

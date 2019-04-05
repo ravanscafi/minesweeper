@@ -262,6 +262,12 @@ class Game extends Component {
     return `${this.state.height},${this.state.width},${this.state.maximumMines}`;
   }
 
+  isGame(height, width, maximumMines) {
+    return this.state.height === height
+      && this.state.width === width
+      && this.state.maximumMines === maximumMines;
+  }
+
   render() {
     return (
       <div className="Game">
@@ -282,15 +288,24 @@ class Game extends Component {
         <div className="bestScore">
           {this.getBestTimeText()}
         </div>
-        <div>
-          <button onClick={() => this.restart(9, 9, 10)}>
-            Beginner
+        <div className="difficulty">
+          <button
+            className={'difficulty-level ' + (this.isGame(9, 9, 10) ? 'selected' : '')}
+            onClick={() => this.restart(9, 9, 10)}
+          >
+            Beginner 👶
           </button>
-          <button onClick={() => this.restart(16, 16, 40)}>
-            Intermediate
+          <button
+            className={'difficulty-level ' + (this.isGame(16, 16, 40) ? 'selected' : '')}
+            onClick={() => this.restart(16, 16, 40)}
+          >
+            Intermediate 🧑
           </button>
-          <button onClick={() => this.restart(16, 30, 99)}>
-            Expert
+          <button
+            className={'difficulty-level ' + (this.isGame(16, 30, 99) ? 'selected' : '')}
+            onClick={() => this.restart(16, 30, 99)}
+          >
+            Expert 🧓
           </button>
         </div>
       </div>
