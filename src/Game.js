@@ -38,6 +38,11 @@ class Game extends Component {
     ).length > maximumMines;
   }
 
+
+  static leftPad(number) {
+    return number.toString().padStart(3, '0');
+  }
+
   constructor(props) {
     super(props);
     this.state = this.getInitialState();
@@ -223,8 +228,8 @@ class Game extends Component {
         <div className="wrapper">
           <Status
             buttonStatus={this.state.buttonStatus}
-            minesLeft={this.state.minesLeft}
-            time={this.state.time}
+            minesLeft={Game.leftPad(this.state.minesLeft)}
+            time={Game.leftPad(this.state.time)}
             onClick={() => this.setState(this.getInitialState())}
           />
         </div>
@@ -234,7 +239,7 @@ class Game extends Component {
           game={this.state.game}
         />
         <div className="bestScore">
-          {this.state.bestTime !== null ? 'Best time: ' + this.state.bestTime : ''}
+          {this.state.bestTime !== null ? 'Best time: ' + Game.leftPad(this.state.bestTime) : ''}
         </div>
       </div>
     );
