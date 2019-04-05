@@ -13,17 +13,15 @@ const renderSquare = (props, row, column, value) => {
   );
 };
 
-const renderRow = (props, row, items) => {
-  return (
-    <div className="row" key={row}>
-      {items.map((value, key) => renderSquare(props, row, key, value))}
-    </div>
-  );
-};
+const renderRow = (props, row, items) =>
+  items.map((value, key) => renderSquare(props, row, key, value));
 
 export default function Board(props) {
   return (
-    <div className={'Board' + (props.gameFinished ? ' disabled' : '')}>
+    <div
+      className={'Board' + (props.gameFinished ? ' disabled' : '')}
+      style={{gridTemplateColumns: `repeat(${props.width}, 1fr)`}}
+    >
       {props.game.map((value, key) => renderRow(props, key, value))}
     </div>
   );

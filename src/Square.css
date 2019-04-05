@@ -1,14 +1,13 @@
 .Square {
-    width: 5vh;
-    height: 5vh;
-    font-size: 4vh;
+    width: 7vmin;
+    height: 7vmin;
+    font-size: 5vmin;
     font-weight: bold;
-    line-height: 4vh;
+    line-height: 5vmin;
     background: #eee;
     border: 1px outset #ddd;
     cursor: default;
     display: inline-block;
-    float: left;
     outline: none;
 }
 .Square.unrevealed:active {
@@ -16,7 +15,7 @@
     border: 1px inset #fff;
 }
 .Square.emoji {
-    font-size: 2.5vh;
+    font-size: 3vmin;
 }
 .Square.revealed, .Square.mine {
     background: #ddd;

@@ -284,6 +284,7 @@ class Game extends Component {
           onRightClick={(event, row, column) => this.handleRightClick(event, row, column)}
           game={this.state.game}
           gameFinished={this.state.gameFinished}
+          width={this.state.width}
         />
         <div className="bestScore">
           {this.getBestTimeText()}

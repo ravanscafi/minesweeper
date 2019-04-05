@@ -3,25 +3,24 @@
     user-select: none;
 }
 .Game .wrapper {
-    padding: 10px;
+    padding: 2vmin;
     background-color: #ccc;
-    margin-bottom: 10px;
+    margin-bottom: 2vmin;
 }
 .Game .bestScore {
-    margin: 10px 0;
+    margin: 2vmin 0;
 }
 
 .Game .difficulty-level {
     background-color: #eee;
     color: #333;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 3vmin;
     outline: none;
-    margin: 0 1vh;
+    margin: 0 1vmin;
 }
 .Game .difficulty-level.selected {
     background-color: #333;
     color: #eee;
     font-weight: bold;
-    font-size: 20px;
 }
