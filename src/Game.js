@@ -56,12 +56,12 @@ class Game extends Component {
     this.stopTimer();
 
     return {
-      solution: this.generateGame(this.height, this.width, this.maximumMines),
       game: Game.generateArray(this.height, this.width, null),
+      solution: null,
+      gameStarted: false,
       gameFinished: false,
       buttonStatus: '🙂',
       minesLeft: this.maximumMines,
-      gameStarted: false,
       time: 0,
       start: 0,
       bestTime: localStorage.getItem('bestTime'),
@@ -76,15 +76,24 @@ class Game extends Component {
 
   handleClick(row, column) {
     let game = this.state.game.slice();
+    let solution;
+
+    if (!this.state.solution) {
+      solution = this.generateGame(this.height, this.width, row, column, this.maximumMines);
+      this.setState({gameStarted: true, solution: solution});
+    } else {
+      solution = this.state.solution.slice();
+    }
     this.checkStart();
+
 
     if (this.state.gameFinished || game[row][column] !== null) {
       return;
     }
 
-    this.reveal(game, row, column);
+    this.reveal(game, solution, row, column);
 
-    this.updateGameStatus(game, row, column);
+    this.updateGameStatus(game, solution, row, column);
   }
 
   handleRightClick(event, row, column) {
@@ -105,37 +114,37 @@ class Game extends Component {
     this.setState({game, minesLeft});
   }
 
-  reveal(game, row, column) {
+  reveal(game, solution, row, column) {
     if (!this.inRange(row, column) || game[row][column] !== null) {
       return;
     }
 
-    game[row][column] = this.state.solution[row][column];
+    game[row][column] = solution[row][column];
 
     if (game[row][column] === 0) {
-      this.expand(game, row, column);
+      this.expand(game, solution, row, column);
     }
   }
 
-  expand(game, row, column) {
-    this.reveal(game, row - 1, column);
-    this.reveal(game, row + 1, column);
-    this.reveal(game, row, column - 1);
-    this.reveal(game, row, column + 1);
-    this.reveal(game, row - 1, column - 1);
-    this.reveal(game, row - 1, column + 1);
-    this.reveal(game, row + 1, column + 1);
-    this.reveal(game, row + 1, column - 1);
+  expand(game, solution, row, column) {
+    this.reveal(game, solution, row - 1, column);
+    this.reveal(game, solution, row + 1, column);
+    this.reveal(game, solution, row, column - 1);
+    this.reveal(game, solution, row, column + 1);
+    this.reveal(game, solution, row - 1, column - 1);
+    this.reveal(game, solution, row - 1, column + 1);
+    this.reveal(game, solution, row + 1, column + 1);
+    this.reveal(game, solution, row + 1, column - 1);
   }
 
-  updateGameStatus(game, row, column) {
+  updateGameStatus(game, solution, row, column) {
     if (Game.isMine(game, row, column)) {
       this.stopTimer();
 
       game = game.map(
         (row, rowKey) => row.map(
           (square, squareKey) => {
-            const isMine = Game.isMine(this.state.solution, rowKey, squareKey);
+            const isMine = Game.isMine(solution, rowKey, squareKey);
             if (square === 'F') {
               return isMine ? square : 'W';
             }
@@ -161,7 +170,7 @@ class Game extends Component {
 
     if (gameFinished) {
       this.stopTimer();
-      game = Game.getSolution(game, this.state.solution, 'F');
+      game = Game.getSolution(game, solution, 'F');
       minesLeft = 0;
       bestTime = bestTime === null || (this.state.time < bestTime) ? this.state.time : bestTime;
       Game.vibrate([300, 40, 300, 40, 300, 40, 300]);
@@ -174,7 +183,7 @@ class Game extends Component {
     this.setState({game, gameFinished, buttonStatus, minesLeft, bestTime});
   }
 
-  generateGame(height, width, maximumMines) {
+  generateGame(height, width, currentRow, currentColumn, maximumMines) {
     const game = Game.generateArray(height, width, 0);
     let generatedMines = 0;
     let row;
@@ -184,7 +193,7 @@ class Game extends Component {
       row = Game.randomInRange(0, height - 1);
       column = Game.randomInRange(0, width - 1);
 
-      if (!Game.isMine(game, row, column)) {
+      if (!Game.isMine(game, row, column) && !(currentRow === row && currentColumn === column)) {
         game[row][column] = 'M';
         this.incrementMinesNearby(game, row - 1, column);
         this.incrementMinesNearby(game, row + 1, column);
@@ -201,9 +210,9 @@ class Game extends Component {
     return game;
   }
 
-  incrementMinesNearby(squares, row, column) {
-    if (this.inRange(row, column) && !Game.isMine(squares, row, column)) {
-      squares[row][column] = squares[row][column] + 1;
+  incrementMinesNearby(game, row, column) {
+    if (this.inRange(row, column) && !Game.isMine(game, row, column)) {
+      game[row][column] = game[row][column] + 1;
     }
   }
 
@@ -222,7 +231,7 @@ class Game extends Component {
       this.stopTimer();
     }
     this.timer = setInterval(() => this.setState({
-      time: Math.floor((Date.now() - this.state.start) / 1000),
+      time: Math.floor((Date.now() - this.state.start) / 1000) + 1,
     }), 1);
   }
 
