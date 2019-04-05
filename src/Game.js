@@ -51,6 +51,10 @@ class Game extends Component {
     this.state = this.getInitialState();
   }
 
+  restart(...args) {
+    this.setState(this.getInitialState(...args));
+  }
+
   getInitialState(height = 9, width = 9, maximumMines = 10) {
     this.stopTimer();
 
@@ -66,7 +70,7 @@ class Game extends Component {
       buttonStatus: EMOJI_OK,
       time: 0,
       start: 0,
-      bestTime: localStorage.getItem('bestTime'),
+      bestTimes: JSON.parse(localStorage.getItem('minesweeper:bestTimes')) || {},
     };
   }
 
@@ -140,48 +144,47 @@ class Game extends Component {
 
   updateGameStatus(game, solution, row, column) {
     if (Game.isMine(game, row, column)) {
-      this.stopTimer();
-
-      game = game.map(
-        (row, rowKey) => row.map(
-          (square, squareKey) => {
-            const isMine = Game.isMine(solution, rowKey, squareKey);
-            if (square === 'F') {
-              return isMine ? square : 'W';
-            }
-
-            return isMine ? 'M' : square;
-          }
-        )
-      );
-      Game.vibrate(800);
-      game[row][column] = 'C'; // differ clicked mine that led to game over
-
-      return this.setState({
-        game,
-        gameFinished: true,
-        buttonStatus: EMOJI_GAME_OVER,
-      });
+      return this.setGameOver(game, solution, row, column);
     }
 
     const gameFinished = !Game.thereAreRemainingMoves(game, this.state.maximumMines);
     const buttonStatus = gameFinished ? EMOJI_WIN : this.state.buttonStatus;
     let minesLeft = this.state.minesLeft;
-    let bestTime = this.state.bestTime;
 
     if (gameFinished) {
       this.stopTimer();
       game = Game.getSolution(game, solution, 'F');
       minesLeft = 0;
-      bestTime = bestTime === null || (this.state.time < bestTime) ? this.state.time : bestTime;
       Game.vibrate([300, 40, 300, 40, 300, 40, 300]);
+      this.updateBestTime(this.state.time || 1);
     }
 
-    if (bestTime !== this.state.bestTime) {
-      localStorage.setItem('bestTime', bestTime);
-    }
+    this.setState({game, gameFinished, buttonStatus, minesLeft});
+  }
 
-    this.setState({game, gameFinished, buttonStatus, minesLeft, bestTime});
+  setGameOver(game, solution, row, column) {
+    this.stopTimer();
+
+    game = game.map(
+      (row, rowKey) => row.map(
+        (square, squareKey) => {
+          const isMine = Game.isMine(solution, rowKey, squareKey);
+          if (square === 'F') {
+            return isMine ? square : 'W';
+          }
+
+          return isMine ? 'M' : square;
+        }
+      )
+    );
+    Game.vibrate(800);
+    game[row][column] = 'C'; // differ clicked mine that led to game over
+
+    this.setState({
+      game,
+      gameFinished: true,
+      buttonStatus: EMOJI_GAME_OVER,
+    });
   }
 
   generateGame(height, width, currentRow, currentColumn, maximumMines) {
@@ -225,8 +228,8 @@ class Game extends Component {
   startTimer() {
     this.setState({
       gameStarted: true,
-      time: this.state.time,
-      start: Date.now() - this.state.time,
+      time: 1,
+      start: Date.now(),
     });
     if (this.timer) {
       this.stopTimer();
@@ -240,6 +243,25 @@ class Game extends Component {
     clearInterval(this.timer);
   }
 
+  updateBestTime(newTime) {
+    const bestTimes = Object.assign({}, this.state.bestTimes);
+    const bestTime = bestTimes[this.getBestTimeKey()] || null;
+    if (bestTime === null || newTime < bestTime) {
+      bestTimes[this.getBestTimeKey()] = newTime;
+      localStorage.setItem('minesweeper:bestTimes', JSON.stringify(bestTimes));
+      this.setState({bestTimes});
+    }
+  }
+
+  getBestTimeText() {
+    const bestTime = this.state.bestTimes[this.getBestTimeKey()] || null;
+    return bestTime !== null ? 'Best time: ' + Game.leftPad(bestTime) : '';
+  }
+
+  getBestTimeKey() {
+    return `${this.state.height},${this.state.width},${this.state.maximumMines}`;
+  }
+
   render() {
     return (
       <div className="Game">
@@ -248,7 +270,7 @@ class Game extends Component {
             buttonStatus={this.state.buttonStatus}
             minesLeft={Game.leftPad(this.state.minesLeft)}
             time={Game.leftPad(this.state.time)}
-            onClick={() => this.setState(this.getInitialState())}
+            onClick={() => this.restart(this.state.height, this.state.width, this.state.maximumMines)}
           />
         </div>
         <Board
@@ -258,7 +280,18 @@ class Game extends Component {
           gameFinished={this.state.gameFinished}
         />
         <div className="bestScore">
-          {this.state.bestTime !== null ? 'Best time: ' + Game.leftPad(this.state.bestTime) : ''}
+          {this.getBestTimeText()}
+        </div>
+        <div>
+          <button onClick={() => this.restart(9, 9, 10)}>
+            Beginner
+          </button>
+          <button onClick={() => this.restart(16, 16, 40)}>
+            Intermediate
+          </button>
+          <button onClick={() => this.restart(16, 30, 99)}>
+            Expert
+          </button>
         </div>
       </div>
     );
