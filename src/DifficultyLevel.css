@@ -1,0 +1,13 @@
+.difficulty-level {
+    background-color: #eee;
+    color: #333;
+    font-weight: bold;
+    font-size: 3vmin;
+    outline: none;
+    margin: 0 1vmin;
+}
+.difficulty-level.selected {
+    background-color: #333;
+    color: #eee;
+    font-weight: bold;
+}

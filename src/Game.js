@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './Game.css';
 import Board from './Board';
 import Status from './Status';
+import DifficultyLevel from './DifficultyLevel';
 
 const EMOJI_OK = '🙂';
 const EMOJI_GAME_OVER = '💀';
@@ -286,31 +287,26 @@ class Game extends Component {
           gameFinished={this.state.gameFinished}
           width={this.state.width}
         />
-        <div className="bestScore">
-          {this.getBestTimeText()}
-        </div>
+        <div className="bestScore">{this.getBestTimeText()}</div>
         <div className="difficulty">
-          <button
-            className={'difficulty-level ' + (this.isGame(9, 9, 10) ? 'selected' : '')}
+          <DifficultyLevel
+            isSelected={this.isGame(9, 9, 10)}
             onClick={() => this.restart(9, 9, 10)}
-          >
-            Beginner
-            <span role="img" aria-label="Beginner">👶</span>
-          </button>
-          <button
-            className={'difficulty-level ' + (this.isGame(16, 16, 40) ? 'selected' : '')}
+            label="Beginner"
+            emoji="👶"
+          />
+          <DifficultyLevel
+            isSelected={this.isGame(16, 16, 40)}
             onClick={() => this.restart(16, 16, 40)}
-          >
-            Intermediate
-            <span role="img" aria-label="Intermediate">🧑</span>
-          </button>
-          <button
-            className={'difficulty-level ' + (this.isGame(16, 30, 99) ? 'selected' : '')}
+            label="Intermediate"
+            emoji="🧑"
+          />
+          <DifficultyLevel
+            isSelected={this.isGame(16, 30, 99)}
             onClick={() => this.restart(16, 30, 99)}
-          >
-            Expert
-            <span role="img" aria-label="Expert">🧓</span>
-          </button>
+            label="Expert"
+            emoji="🧓"
+          />
         </div>
       </div>
     );
