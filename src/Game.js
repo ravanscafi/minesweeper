@@ -44,6 +44,10 @@ class Game extends Component {
   }
 
   static leftPad(number) {
+    if (number < 0) {
+      return '-' + Math.abs(number).toString().padStart(2, '0');
+    }
+
     return number.toString().padStart(3, '0');
   }
 
